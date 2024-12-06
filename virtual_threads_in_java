@@ -1,0 +1,108 @@
+Below notes are made using chatGPT
+
+---
+
+### 1. **Platform Threads in JVM**
+   - JVM traditionally operates using **platform threads**, which are managed by the underlying operating system.
+   - These threads map directly to OS threads, meaning each JVM thread corresponds to an OS thread.
+   - **Concurrency Limitations**:
+     - If the machine has 8 CPU cores/threads and 8 requests are being handled, each CPU thread processes one request concurrently.
+     - If 16 requests arrive:
+       - 8 requests will be processed immediately.
+       - The remaining 8 will wait in a queue or be managed via thread pooling (processed only after the first 8 complete).
+
+---
+
+### 2. **Handling Concurrent Requests**
+   - Traditional JVM threads can only scale up to the number of available OS threads, which might lead to performance bottlenecks under high concurrency.
+   - **Reactive Programming** can address this limitation by efficiently managing thread utilization.
+
+---
+
+### 3. **Reactive Programming in Java**
+   - Reactive programming is an asynchronous, non-blocking paradigm that allows efficient use of resources.
+   - In Java (via Spring Boot's WebFlux or Project Reactor):
+     - It uses a small number of threads to handle many requests concurrently.
+     - When a thread performs a task (e.g., I/O), it is not blocked; instead, the thread is freed up to handle other tasks.
+     - The **reactive event-loop model** ensures threads handle events, callbacks, and data streams without blocking.
+
+---
+
+### 4. **Virtual Threads in JVM**
+   - Introduced in **Project Loom** (Java 19+), virtual threads are lightweight threads managed by the JVM instead of the OS.
+   - Characteristics:
+     - Virtual threads are much cheaper than platform threads.
+     - Thousands (or even millions) of virtual threads can run concurrently, mapped to a limited number of platform threads.
+     - No need for thread pooling as JVM schedules virtual threads efficiently.
+
+---
+
+### 5. **Comparison: Platform Threads vs. Virtual Threads**
+   - **Platform Threads**:
+     - Directly map to OS threads.
+     - Limited scalability based on the number of cores.
+     - Suitable for traditional blocking applications.
+   - **Virtual Threads**:
+     - Mapped to platform threads by JVM.
+     - Highly scalable due to lightweight nature.
+     - Ideal for reactive and non-blocking programming styles.
+   - Both thread types can coexist in the same JVM.
+
+---
+
+### 6. **Applying Virtual Threads in Spring Boot**
+   - Starting from Spring Boot 3.1 and Java 20, virtual threads can be leveraged for building scalable web applications.
+   - Configuration in Spring Boot:
+     1. Ensure you're using Java 20 or higher with Project Loom.
+     2. Enable virtual threads by configuring your application thread executor:
+        ```java
+        @Bean
+        public Executor virtualThreadExecutor() {
+            return Executors.newVirtualThreadPerTaskExecutor();
+        }
+        ```
+     3. Use this executor for task scheduling or thread-based operations.
+   - Benefits:
+     - Simplifies concurrency management.
+     - Eliminates the need for complex thread pooling configurations.
+     - Allows handling a large number of concurrent requests.
+
+---
+
+### 7. **Reactive Programming with Virtual Threads**
+   - Virtual threads and reactive programming can work together:
+     - Reactive programming optimizes thread usage by non-blocking I/O.
+     - Virtual threads make blocking I/O lightweight and scalable.
+   - You can opt for either approach based on application requirements:
+     - **Reactive**: For fully asynchronous systems.
+     - **Virtual Threads**: For simpler code with blocking-style programming but scalable threading.
+
+---
+
+### 8. **Example: Handling Client Requests**
+   - Scenario:
+     - Machine with 8 platform threads.
+     - 16 client requests arrive.
+   - **Traditional Threading**:
+     - First 8 requests processed concurrently.
+     - Remaining 8 queued for execution after.
+   - **Reactive Programming**:
+     - All 16 requests processed concurrently using event-loop style handling.
+   - **Virtual Threads**:
+     - All 16 requests can be handled concurrently due to lightweight nature of virtual threads.
+
+---
+
+### 9. **Key Points for Notes**
+   - JVM threads are traditionally platform threads mapped to OS threads.
+   - Reactive programming optimizes resource usage by using event-driven, non-blocking I/O.
+   - Virtual threads (introduced in Project Loom) are lightweight threads that eliminate the need for thread pooling.
+   - Spring Boot can utilize virtual threads starting from version 3.1 with Java 20+.
+   - Configuring virtual threads in Spring Boot simplifies scalability without requiring reactive programming.
+   - Choose between reactive programming and virtual threads based on project complexity and requirements:
+     - Reactive: Best for fully non-blocking applications.
+     - Virtual Threads: Simplifies scalability for blocking-style programming.
+
+---
+
+By understanding and applying these principles, you can build highly efficient and scalable Java applications with Spring Boot.
