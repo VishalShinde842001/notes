@@ -56,6 +56,9 @@ As we know there functionality is same as they are looking
 =>1000.000000 convert to 1000
 
 8)setScale()
+==
+Different RoundingMode
+ UP,DOWN,CEILING,FLOOR,HALF_UP_HALF_DOWN,HALF_EVEN
 
 
 ===================================================================================================================
