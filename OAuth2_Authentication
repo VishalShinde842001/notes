@@ -257,3 +257,4 @@ Short-lived Tokens: The access token should be short-lived, and a refresh token 
 When to Use Resource Owner Password Credentials Grant:
 Trusted Applications: Suitable for trusted applications (e.g., first-party mobile apps or websites) where the user willingly provides their username and password.
 Low-Risk Scenarios: Use when the risks of exposing the user's credentials are low, and the client application is highly trusted.
+=========================================================================================================================================================================================================================================================================================================================================================================================================================================================
