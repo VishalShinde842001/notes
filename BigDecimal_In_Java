@@ -60,6 +60,11 @@ As we know there functionality is same as they are looking
 Different RoundingMode
  UP,DOWN,CEILING,FLOOR,HALF_UP_HALF_DOWN,HALF_EVEN
 
+ =>UP--> always convert to up even and not consider the sign if 1.4 and if -1.4===> 2
+=>DOWN--> always convert to down even and not consider the sign if 1.4 and if -1.4===> 1
+=>CEILING--> will goes towards up 1.4=>2     -1.4=>-1
+=>FLOOR--> Will goes towards up 1.4=>1  -1.4=>-2
+
 
 ===================================================================================================================
 #### 3. Scale and Precision
